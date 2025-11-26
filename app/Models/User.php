@@ -12,6 +12,12 @@ class User extends Authenticatable
 
     // Cambiar la tabla
     protected $table = 'usuario';
+    
+    // Deshabilitar timestamps
+    public $timestamps = false;
+    
+    // Deshabilitar remember_token
+    protected $rememberTokenName = null;
 
     // Campos permitidos
     protected $fillable = [
@@ -26,7 +32,6 @@ class User extends Authenticatable
     // Campos ocultos
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     // Casts
@@ -34,6 +39,7 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
+            'estado' => 'boolean',
         ];
     }
 }

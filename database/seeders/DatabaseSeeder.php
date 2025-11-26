@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
-//use App\Models\User;
+use App\Models\User;
+use App\Models\Propietario;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,12 +18,22 @@ class DatabaseSeeder extends Seeder
     
     public function run(): void
     {
-        // User::factory(10)->create();
-        $this->call(MenuSeeder::class);
+        // Crear usuario propietario
+        $usuario = User::create([
+            'nombre' => 'Administrador Belén',
+            'telefono' => '70000000',
+            'email' => 'admin@lavanderiabelen.com',
+            'password' => Hash::make('password'),
+            'tipo_usuario' => 'propietario',
+            'estado' => true,
+        ]);
 
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        // Crear registro de propietario
+        Propietario::create([
+            'id' => $usuario->id,
+            'razon_social' => 'Lavandería Belén S.R.L.',
+        ]);
+
+        $this->call(MenuSeeder::class);
     }
 }
