@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ConfiguracionController;
 use App\Http\Controllers\OrdenController;
+use App\Http\Controllers\PagoQrController;
+use App\Http\Controllers\PagoQrCallbackController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -97,7 +99,26 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/{nro}/pago', [OrdenController::class, 'registrarPago'])
             ->name('ordenes.pago');
+
+        // Pago con QR
+        Route::get('/{nro}/pago-qr', [PagoQrController::class, 'show'])
+            ->name('ordenes.pago-qr');
+
+        Route::post('/{nro}/pago-qr/verificar', [PagoQrController::class, 'verificarPago'])
+            ->name('ordenes.pago-qr.verificar');
     });
+
+    /**
+     * =========================
+     *    CALLBACK PAGOFACIL
+     * =========================
+     * Esta ruta NO debe tener middleware auth
+     * para que PagoFacil pueda hacer POST
+     */
 });
+
+// Callback de PagoFacil (sin autenticación)
+Route::post('/payment/callback', [PagoQrCallbackController::class, 'handle'])
+    ->name('pagofacil.callback');
 
 require __DIR__.'/auth.php';

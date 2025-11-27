@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use App\Models\Usuario;
 use App\Models\Propietario;
 use App\Models\Empleado;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
         // ========================================
         
         // Crear usuario propietario
-        $usuarioPropietario = User::create([
+        $usuarioPropietario = Usuario::create([
             'nombre' => 'Juan Pérez',
             'telefono' => '70000000',
             'email' => 'admin@lavanderiabelen.com',
@@ -49,7 +49,7 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($empleados as $emp) {
-            $usuario = User::create([
+            $usuario = Usuario::create([
                 'nombre' => $emp['nombre'],
                 'telefono' => $emp['telefono'],
                 'email' => $emp['email'],

@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, useForm, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
@@ -92,6 +92,11 @@ const getMetodoBadge = (metodo) => {
     return metodo === 'EFECTIVO' 
         ? 'bg-green-100 text-green-800' 
         : 'bg-blue-100 text-blue-800';
+};
+
+// Ir a página de pago QR
+const irAPagoQr = () => {
+    router.visit(route('ordenes.pago-qr', props.orden.nro));
 };
 </script>
 
@@ -256,12 +261,20 @@ const getMetodoBadge = (metodo) => {
                 <div class="mb-6 bg-white rounded-lg shadow-sm p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold">💰 Historial de Pagos</h3>
-                        <PrimaryButton 
-                            v-if="orden.saldo_pendiente > 0"
-                            @click="abrirModalPago"
-                        >
-                            💵 Registrar Pago
-                        </PrimaryButton>
+                        <div v-if="orden.saldo_pendiente > 0" class="flex gap-2">
+                            <PrimaryButton 
+                                @click="abrirModalPago"
+                                class="bg-blue-600 hover:bg-blue-700"
+                            >
+                                💵 Registrar Pago
+                            </PrimaryButton>
+                            <PrimaryButton 
+                                @click="irAPagoQr"
+                                class="bg-green-600 hover:bg-green-700"
+                            >
+                                📱 Pagar con QR
+                            </PrimaryButton>
+                        </div>
                     </div>
 
                     <!-- Estado de Pago -->
@@ -376,15 +389,14 @@ const getMetodoBadge = (metodo) => {
                         <InputError class="mt-2" :message="formPago.errors.metodo" />
                     </div>
 
-                    <div class="flex justify-end gap-3">
-                        <SecondaryButton type="button" @click="mostrarModalPago = false">
+                    <div class="flex justify-center gap-3">
+                        <SecondaryButton @click="mostrarModalQR = false">
                             Cancelar
                         </SecondaryButton>
-                        <PrimaryButton :disabled="formPago.processing">
-                            {{ formPago.metodo === 'QR' ? '📱 Generar QR' : '💾 Registrar Pago' }}
+                        <PrimaryButton @click="confirmarPagoQR" :disabled="formPago.processing">
+                            ✅ Confirmar Pago
                         </PrimaryButton>
                     </div>
-
                 </form>
             </div>
         </Modal>
@@ -426,6 +438,5 @@ const getMetodoBadge = (metodo) => {
                 </div>
             </div>
         </Modal>
-
     </AuthenticatedLayout>
 </template>
